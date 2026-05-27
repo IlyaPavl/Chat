@@ -1,0 +1,11 @@
+xcassets:
+  inputs:
+    - Assets/Images.xcassets
+    - Assets/Icons.xcassets
+    - Assets/Colors.xcassets
+  outputs:
+    - templateName: swift5
+      output: Generated/Assets.swift
+      params:
+        publicAccess: true
+        bundle: ResourcesBundle.bundle
