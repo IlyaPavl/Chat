@@ -44,7 +44,7 @@
 		48BEADDA2FC5D6C5002694E2 /* Exceptions for "Chat" folder in "Chat" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				System/Info.plist,
+				Info.plist,
 			);
 			target = 48BEADC72FC5D6C5002694E2 /* Chat */;
 		};

@@ -11,19 +11,52 @@ extension UIButton {
     
     /// CommonButton configuration
     convenience init(
-        title: String,
-        titleColor: UIColor,
+        configurationStyle: UIButton.Configuration = .glass(),
         image: UIImage? = nil,
-        font: UIFont? = .commonButtonFont,
-        backgroundColor: UIColor,
-        cornerRadius: CGFloat = .commonButtonCornerRadius
+        imageSize: CGSize? = nil,
+        imagePadding: CGFloat = Layout.Spacing.s,
+        imagePlacement: NSDirectionalRectEdge = .leading,
+        backgroundColor: UIColor = .systemBackground,
+        cornerStyle: UIButton.Configuration.CornerStyle = .large,
+        title: String? = nil,
+        foregroundColor: UIColor = .label,
+        font: UIFont = Typography.buttonFont,
+        symbolPointSize: CGFloat? = nil,
+        symbolWeight: UIImage.SymbolWeight = .regular
     ) {
-        self.init(type: .system)
-        setTitle(title, for: .normal)
-        setTitleColor(titleColor, for: .normal)
-        setImage(image, for: .normal)
-        titleLabel?.font = font
-        self.backgroundColor = backgroundColor
-        layer.cornerRadius = cornerRadius
+        var configuration = configurationStyle
+
+        if let image {
+            if let imageSize {
+                configuration.image = image.thumbnail(fitting: imageSize)
+            } else {
+                configuration.image = image
+            }
+        }
+
+        configuration.imagePadding = imagePadding
+        configuration.imagePlacement = imagePlacement
+        configuration.baseBackgroundColor = backgroundColor
+        configuration.baseForegroundColor = foregroundColor
+        configuration.cornerStyle = cornerStyle
+
+        if let title {
+            configuration.attributedTitle = AttributedString(
+                title,
+                attributes: AttributeContainer([
+                    .font: font,
+                    .foregroundColor: foregroundColor,
+                ])
+            )
+        }
+
+        if let symbolPointSize {
+            configuration.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(
+                pointSize: symbolPointSize,
+                weight: symbolWeight
+            )
+        }
+
+        self.init(configuration: configuration)
     }
 }
