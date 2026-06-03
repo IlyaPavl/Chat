@@ -22,7 +22,8 @@ extension UIButton {
         foregroundColor: UIColor = .label,
         font: UIFont = Typography.buttonFont,
         symbolPointSize: CGFloat? = nil,
-        symbolWeight: UIImage.SymbolWeight = .regular
+        symbolWeight: UIImage.SymbolWeight = .regular,
+        symbolColor: UIColor? = nil
     ) {
         var configuration = configurationStyle
 
@@ -56,7 +57,13 @@ extension UIButton {
                 weight: symbolWeight
             )
         }
-
+        
+        if let symbolColor {
+            configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in
+                symbolColor
+            }
+        }
+        
         self.init(configuration: configuration)
     }
 }

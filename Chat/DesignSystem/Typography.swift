@@ -9,6 +9,10 @@ import UIKit
 
 enum Typography {
     static let buttonFont = UIFont.monospacedSystemFont(ofSize: 16, weight: .semibold)
-    static let loginLogoFont = UIFont.monospacedSystemFont(ofSize: Layout.Login.logoFontSize, weight: .black)
+    static let loginLogoFont = UIFont.monospacedSystemFont(ofSize: Layout.AuthFlow.Login.logoFontSize, weight: .black)
+    static let welcomeLogoFont = UIFont.monospacedSystemFont(
+        ofSize: Layout.AuthFlow.SignUp.welcomeLabelFontSize,
+        weight: .black
+    )
     static let commonLabelFont = UIFont.monospacedSystemFont(ofSize: 16, weight: .regular)
 }

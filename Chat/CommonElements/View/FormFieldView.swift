@@ -1,5 +1,5 @@
 //
-//  ButtonFormView.swift
+//  FormFieldView.swift
 //  Chat
 //
 //  Created by Илья Павлов on 27.05.2026.
@@ -7,15 +7,15 @@
 
 import UIKit
 
-final class ButtonFormView: UIView {
+final class FormFieldView: UIView {
     let titleLabel: UILabel
-    let button: UIButton
+    let textField: UITextField
 
     init(
         title: String,
-        button: UIButton,
+        textField: UITextField,
         titleFont: UIFont = Typography.commonLabelFont,
-        labelSpacing: CGFloat = Layout.AuthFlow.labelToControl
+        fieldSpacing: CGFloat = Layout.AuthFlow.labelToControl
     ) {
         let label = UILabel()
         label.font = titleFont
@@ -23,11 +23,11 @@ final class ButtonFormView: UIView {
         label.text = title
 
         self.titleLabel = label
-        self.button = button
+        self.textField = textField
 
         super.init(frame: .zero)
 
-        [label, button].forEach {
+        [label, textField].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
         }
@@ -37,11 +37,11 @@ final class ButtonFormView: UIView {
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
             label.trailingAnchor.constraint(equalTo: trailingAnchor),
 
-            button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: labelSpacing),
-            button.leadingAnchor.constraint(equalTo: leadingAnchor),
-            button.trailingAnchor.constraint(equalTo: trailingAnchor),
-            button.heightAnchor.constraint(equalToConstant: Layout.Button.height),
-            button.bottomAnchor.constraint(equalTo: bottomAnchor),
+            textField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: fieldSpacing),
+            textField.leadingAnchor.constraint(equalTo: leadingAnchor),
+            textField.trailingAnchor.constraint(equalTo: trailingAnchor),
+            textField.heightAnchor.constraint(equalToConstant: Layout.TextField.height),
+            textField.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 

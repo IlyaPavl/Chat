@@ -1,13 +1,14 @@
 //
-//  ButtonFormView.swift
+//  AuthFooterView.swift
 //  Chat
 //
-//  Created by Илья Павлов on 27.05.2026.
+//  Created by Илья Павлов on 02.06.2026.
 //
 
 import UIKit
 
-final class ButtonFormView: UIView {
+/// Footer: текст слева, кнопка справа.
+final class AuthFooterView: UIView {
     let titleLabel: UILabel
     let button: UIButton
 
@@ -15,12 +16,13 @@ final class ButtonFormView: UIView {
         title: String,
         button: UIButton,
         titleFont: UIFont = Typography.commonLabelFont,
-        labelSpacing: CGFloat = Layout.AuthFlow.labelToControl
+        itemSpacing: CGFloat = Layout.AuthFlow.footerItemSpacing
     ) {
         let label = UILabel()
         label.font = titleFont
         label.textColor = .label
         label.text = title
+        label.numberOfLines = 0
 
         self.titleLabel = label
         self.button = button
@@ -33,15 +35,14 @@ final class ButtonFormView: UIView {
         }
 
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: topAnchor),
             label.leadingAnchor.constraint(equalTo: leadingAnchor),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor),
+            label.topAnchor.constraint(equalTo: topAnchor),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor),
 
-            button.topAnchor.constraint(equalTo: label.bottomAnchor, constant: labelSpacing),
-            button.leadingAnchor.constraint(equalTo: leadingAnchor),
+            button.leadingAnchor.constraint(greaterThanOrEqualTo: label.trailingAnchor, constant: itemSpacing),
             button.trailingAnchor.constraint(equalTo: trailingAnchor),
+            button.centerYAnchor.constraint(equalTo: label.centerYAnchor),
             button.heightAnchor.constraint(equalToConstant: Layout.Button.height),
-            button.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 

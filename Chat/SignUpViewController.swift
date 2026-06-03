@@ -1,35 +1,50 @@
 //
-//  AuthViewController.swift
+//  SignUpViewController.swift
 //  Chat
 //
-//  Created by Илья Павлов on 26.05.2026.
+//  Created by Илья Павлов on 27.05.2026.
 //
 
 import UIKit
-import Resources
 import SwiftUI
 
-final class AuthViewController: UIViewController {
+final class SignUpViewController: UIViewController {
 
     private let headerView = AuthTitleView(
-        title: String(localized: .appName),
-        font: Typography.loginLogoFont
+        title: String(localized: .authSignupWelcomeLabel),
+        font: Typography.welcomeLogoFont,
+        numberOfLines: 0
     )
 
-    private let googleButton = UIButton(
+    private let emailTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.keyboardType = .emailAddress
+        textField.textContentType = .emailAddress
+        textField.autocapitalizationType = .none
+        return textField
+    }()
+
+    private let passwordTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.isSecureTextEntry = true
+        textField.textContentType = .newPassword
+        return textField
+    }()
+
+    private let confirmPasswordTextField: UITextField = {
+        let textField = UITextField()
+        textField.borderStyle = .roundedRect
+        textField.isSecureTextEntry = true
+        textField.textContentType = .newPassword
+        return textField
+    }()
+
+    private let signUpButton = UIButton(
         configurationStyle: .glass(),
-        image: Asset.Icons.google.image,
-        imageSize: CGSize(width: Layout.Button.iconSize, height: Layout.Button.iconSize),
-        title: String(localized: .authGoogleButtonTitle),
+        title: String(localized: .authSignupButtonTitle),
         foregroundColor: .label
-    )
-
-    private let emailButton = UIButton(
-        configurationStyle: .glass(),
-        image: UIImage(systemName: "envelope"),
-        title: String(localized: .authEmailButtonTitle),
-        foregroundColor: .label,
-        symbolPointSize: Layout.Button.iconSize
     )
 
     private let loginButton = UIButton(
@@ -44,17 +59,28 @@ final class AuthViewController: UIViewController {
     )
 
     private lazy var contentStackView: UIStackView = {
-        let googleRow = ButtonFormView(
-            title: String(localized: .authGoogleLabel),
-            button: googleButton
+        let emailField = FormFieldView(
+            title: String(localized: .authEmailLabel),
+            textField: emailTextField
         )
-        let emailRow = ButtonFormView(
-            title: String(localized: .authOrEmailLabel),
-            button: emailButton
+        let passwordField = FormFieldView(
+            title: String(localized: .authSignupPasswordLabel),
+            textField: passwordTextField
         )
-        let stackView = UIStackView(arrangedSubviews: [googleRow, emailRow])
+        let confirmPasswordField = FormFieldView(
+            title: String(localized: .authSignupConfirmPasswordLabel),
+            textField: confirmPasswordTextField
+        )
+        let stackView = UIStackView(arrangedSubviews: [
+            headerView,
+            emailField,
+            passwordField,
+            confirmPasswordField,
+            signUpButton,
+        ])
         stackView.axis = .vertical
         stackView.spacing = Layout.AuthFlow.sectionSpacing
+        stackView.setCustomSpacing(Layout.AuthFlow.headerToContent, after: headerView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -66,12 +92,13 @@ final class AuthViewController: UIViewController {
     }
 }
 
-private extension AuthViewController {
+private extension SignUpViewController {
     func setupUI() {
         [contentStackView, loginFooter].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview($0)
         }
+        signUpButton.heightAnchor.constraint(equalToConstant: Layout.Button.height).isActive = true
 
         NSLayoutConstraint.activate(
             [
@@ -99,15 +126,12 @@ private extension AuthViewController {
                 loginFooter.trailingAnchor.constraint(
                     equalTo: view.trailingAnchor,
                     constant: -Layout.AuthFlow.horizontalInset
-                )
+                ),
             ]
         )
-
-        contentStackView.insertArrangedSubview(headerView, at: 0)
-        contentStackView.setCustomSpacing(Layout.AuthFlow.headerToContent, after: headerView)
     }
 }
 
 #Preview {
-    AuthViewController()
+    SignUpViewController()
 }
