@@ -70,10 +70,7 @@ final class LoginViewController: UIViewController {
         orLabel.font = Typography.commonLabelFont
         orLabel.textColor = .label
 
-        let emailField = FormFieldView(
-            title: String(localized: .authEmailLabel),
-            textField: emailTextField
-        )
+        let emailField = FormFieldView(title: String(localized: .authEmailLabel), textField: emailTextField)
         let passwordField = FormFieldView(
             title: String(localized: .authSignupPasswordLabel),
             textField: passwordTextField

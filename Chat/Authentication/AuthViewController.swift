@@ -44,14 +44,8 @@ final class AuthViewController: UIViewController {
     )
 
     private lazy var contentStackView: UIStackView = {
-        let googleRow = ButtonFormView(
-            title: String(localized: .authGoogleLabel),
-            button: googleButton
-        )
-        let emailRow = ButtonFormView(
-            title: String(localized: .authOrEmailLabel),
-            button: emailButton
-        )
+        let googleRow = ButtonFormView(title: String(localized: .authGoogleLabel), button: googleButton)
+        let emailRow = ButtonFormView(title: String(localized: .authOrEmailLabel), button: emailButton)
         let stackView = UIStackView(arrangedSubviews: [googleRow, emailRow])
         stackView.axis = .vertical
         stackView.spacing = Layout.AuthFlow.sectionSpacing

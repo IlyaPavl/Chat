@@ -59,10 +59,7 @@ final class SignUpViewController: UIViewController {
     )
 
     private lazy var contentStackView: UIStackView = {
-        let emailField = FormFieldView(
-            title: String(localized: .authEmailLabel),
-            textField: emailTextField
-        )
+        let emailField = FormFieldView(title: String(localized: .authEmailLabel), textField: emailTextField)
         let passwordField = FormFieldView(
             title: String(localized: .authSignupPasswordLabel),
             textField: passwordTextField
