@@ -10,6 +10,10 @@ import UIKit
 enum Layout {
     enum Spacing {
 
+        /// Spacing = 2
+        static let xxs: CGFloat = 2
+        /// Spacing = 4
+        static let xs: CGFloat = 4
         /// Spacing = 8
         static let s: CGFloat = 8
         /// Spacing = 16
@@ -28,6 +32,7 @@ enum Layout {
 
     enum CornerRadius {
         static let button: CGFloat = 12
+        static let cell: CGFloat = 12
         static let textView: CGFloat = 6
     }
 
@@ -69,6 +74,18 @@ enum Layout {
         enum Profile {
             static let addProfilePhotoButtonSize: CGFloat = 30
             static let profilePhotoSize: CGFloat = 100
+        }
+    }
+    
+    enum Chats {
+        static let avatarSize: CGFloat = 60
+
+        enum waitingChats {
+            static let groupSize: CGFloat = 80
+        }
+        
+        enum activeChats {
+            static let groupHeight: CGFloat = 60
         }
     }
 }

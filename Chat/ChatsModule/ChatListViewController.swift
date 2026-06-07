@@ -15,6 +15,7 @@ final class ChatListViewController: UIViewController {
         let layout = createCompositionalLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.delegate = self
         return collectionView
     }()
 
@@ -38,7 +39,6 @@ final class ChatListViewController: UIViewController {
 private extension ChatListViewController {
     func setupUI() {
         navigationItem.title = "Chats"
-        navigationItem.largeTitleDisplayMode = .inline
         view.addSubview(chatsCollectionView)
         NSLayoutConstraint.activate([
             chatsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -54,7 +54,7 @@ private extension ChatListViewController {
         searchController.searchBar.delegate = self
 
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.hidesSearchBarWhenScrolling = true
     }
 }
 
@@ -62,19 +62,26 @@ private extension ChatListViewController {
 private extension ChatListViewController {
     
     func setupDataSource() {
-        
-        let activeCell = UICollectionView.CellRegistration<UICollectionViewListCell, ChatListModel> { cell, _, item in
-            var content = cell.defaultContentConfiguration()
-            content.text = item.username
-            content.secondaryText = item.lastMessage
-            content.image = UIImage(systemName: "person.circle")
-            cell.contentConfiguration = content
+        let waitingCell = UICollectionView.CellRegistration<UICollectionViewCell, ChatListModel> { cell, _, item in
+            cell.contentConfiguration = WaitingChatCell.contentConfiguration(for: item)
+            cell.applyRoundedStyle()
         }
         
-        let waitingCell = UICollectionView.CellRegistration<UICollectionViewListCell, ChatListModel> { cell, _, item in
-            var content = cell.defaultContentConfiguration()
-            content.image = UIImage(systemName: "person.crop.circle")
-            cell.contentConfiguration = content
+        let waitingCellSupplementary = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(
+            elementKind: UICollectionView.elementKindSectionHeader
+        ) { supplementaryView, _, _ in
+            supplementaryView.label.text = "Waiting Chats"
+        }
+        
+        let activeCell = UICollectionView.CellRegistration<UICollectionViewCell, ChatListModel> { cell, _, item in
+            cell.contentConfiguration = ActiveChatCell.contentConfiguration(for: item)
+            cell.applyRoundedStyle()
+        }
+        
+        let activeCellSupplementary = UICollectionView.SupplementaryRegistration<TitleSupplementaryView>(
+            elementKind: UICollectionView.elementKindSectionHeader
+        ) { supplementaryView, _, _ in
+            supplementaryView.label.text = "Active Chats"
         }
         
         dataSource = UICollectionViewDiffableDataSource(collectionView: chatsCollectionView) { [weak self] collectionView, indexPath, item in
@@ -87,6 +94,19 @@ private extension ChatListViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: activeCell, for: indexPath, item: item)
             }
         }
+        
+        dataSource?.supplementaryViewProvider = { [weak self] collectionView, kind, indexPath in
+            guard let self else { fatalError("ChatListViewController was deallocated") }
+            guard kind == UICollectionView.elementKindSectionHeader else { return nil }
+
+            let section = section(for: indexPath.section)
+            switch section {
+            case .waitingChats:
+                return chatsCollectionView.dequeueConfiguredReusableSupplementary(using: waitingCellSupplementary, for: indexPath)
+            case .activeChats:
+                return chatsCollectionView.dequeueConfiguredReusableSupplementary(using: activeCellSupplementary, for: indexPath)
+            }
+        }
     }
     
     func applySnapshot(animatingDifferences: Bool = true) {
@@ -94,13 +114,13 @@ private extension ChatListViewController {
         dataSource?.apply(snapshot, animatingDifferences: animatingDifferences)
     }
     
-    func section(for indexPath: Int) -> ChatSections {
+    func section(for index: Int) -> ChatSections {
         guard let dataSource else {
             fatalError("DataSource is not configured")
         }
         let snapshot = dataSource.snapshot()
         let sectionIdentifiers = snapshot.sectionIdentifiers
-        return sectionIdentifiers[indexPath]
+        return sectionIdentifiers[index]
     }
     
     func makeSnapshot(from chats: [ChatListModel]) -> NSDiffableDataSourceSnapshot<ChatSections, ChatListModel> {
@@ -147,13 +167,14 @@ private extension ChatListViewController {
         
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(80),
-            heightDimension: .absolute(80)
+            widthDimension: .absolute(Layout.Chats.waitingChats.groupSize),
+            heightDimension: .absolute(Layout.Chats.waitingChats.groupSize)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = Layout.Spacing.m
         section.orthogonalScrollingBehavior = .continuousGroupLeadingBoundary
+        section.boundarySupplementaryItems = [makeSectionHeader()]
         section.contentInsets = .init(
             top: Layout.Spacing.m,
             leading: Layout.Spacing.m,
@@ -172,11 +193,12 @@ private extension ChatListViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(70)
+            heightDimension: .estimated(Layout.Chats.activeChats.groupHeight)
         )
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         section.interGroupSpacing = Layout.Spacing.s
+        section.boundarySupplementaryItems = [makeSectionHeader()]
         section.contentInsets = .init(
             top: Layout.Spacing.m,
             leading: Layout.Spacing.m,
@@ -185,12 +207,27 @@ private extension ChatListViewController {
         )
         return section
     }
+
+    func makeSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+        return NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: headerSize,
+            elementKind: UICollectionView.elementKindSectionHeader,
+            alignment: .topLeading
+        )
+    }
 }
 
 // MARK: - UISearchBarDelegate
 extension ChatListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         print(searchText)
+    }
+}
+
+extension ChatListViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
 }
 

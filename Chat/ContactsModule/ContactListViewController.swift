@@ -11,7 +11,7 @@ final class ContactListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        setupSearchBar()
+//        setupSearchBar()
     }
 }
 

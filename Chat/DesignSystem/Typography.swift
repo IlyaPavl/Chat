@@ -15,4 +15,6 @@ enum Typography {
         weight: .black
     )
     static let commonLabelFont = UIFont.monospacedSystemFont(ofSize: 16, weight: .regular)
+    static let commonTextFont = UIFont.monospacedSystemFont(ofSize: 14, weight: .regular)
+    static let supHeaderFont = UIFont.monospacedSystemFont(ofSize: 25, weight: .heavy)
 }
