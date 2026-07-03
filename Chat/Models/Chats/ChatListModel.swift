@@ -7,7 +7,7 @@
 
 import Foundation
 
-nonisolated struct ChatListModel: Hashable, Sendable {
+nonisolated struct ChatListModel: Identifiable, Hashable, Sendable {
     let id: UUID
     let username: String
     let avatarURL: URL?
@@ -21,18 +21,10 @@ nonisolated struct ChatListModel: Hashable, Sendable {
         self.lastMessage = lastMessage
         self.state = state
     }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-
-    static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.id == rhs.id
-    }
 }
 
 extension ChatListModel {
-    static var mock: [Self] {
+    static let mock: [Self] = {
         mockData.enumerated().map { index, listItem in
             ChatListModel(
                 username: listItem.username,
@@ -40,7 +32,7 @@ extension ChatListModel {
                 state: index < 10 ? .waiting : .active
             )
         }
-    }
+    }()
 
     private static let mockData: [(username: String, lastMessage: String)] = [
         ("Ivan Ivanov", "Hey, how are you?"),

@@ -5,7 +5,7 @@
 //  Created by Илья Павлов on 27.05.2026.
 //
 
-import UIKit
+import SwiftUI
 
 enum Layout {
     enum Spacing {
@@ -37,7 +37,7 @@ enum Layout {
     }
 
     enum Button {
-        static let height: CGFloat = 50
+        static let height: CGFloat = 40
         static let iconSize: CGFloat = 16
     }
 
@@ -49,7 +49,7 @@ enum Layout {
         static let minHeight: CGFloat = 60
         static let maxHeight: CGFloat = 120
         static let borderWidth: CGFloat = 1
-        static let contentInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        static let contentInset = EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8)
     }
 
     /// Общие отступы Auth / Login / SignUp.
@@ -62,30 +62,35 @@ enum Layout {
         static let labelToControl = Spacing.m
         static let footerItemSpacing = Spacing.m
         static let footerBottomInset = Spacing.xxl
-        
+
         enum Login {
             static let logoFontSize: CGFloat = 50
         }
-        
+
         enum SignUp {
             static let welcomeLabelFontSize: CGFloat = 30
         }
-        
+
         enum Profile {
             static let addProfilePhotoButtonSize: CGFloat = 30
             static let profilePhotoSize: CGFloat = 100
         }
     }
-    
+
     enum Chats {
         static let avatarSize: CGFloat = 60
 
         enum waitingChats {
             static let groupSize: CGFloat = 80
         }
-        
+
         enum activeChats {
             static let groupHeight: CGFloat = 60
         }
+    }
+
+    enum Contacts {
+        static let groupHeight: CGFloat = 150
+        static let avatarSize: CGFloat = 100
     }
 }
