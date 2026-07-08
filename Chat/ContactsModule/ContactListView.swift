@@ -13,7 +13,7 @@ struct ContactListView: View {
     var body: some View {
         ScrollView {}
             .background(Color(.systemBackground))
-            .navigationTitle(String(localized: .tabContactTitle))
+            .navigationTitle(Text(.tabContactTitle))
             .searchable(text: $searchText)
             .onChange(of: searchText) { _, newValue in
                 print(newValue)

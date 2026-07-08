@@ -14,30 +14,11 @@ struct ChatListView: View {
         ScrollView {
             LazyVStack(alignment: .leading, spacing: Layout.Spacing.m, pinnedViews: [.sectionHeaders]) {
                 if !store.waitingChats.isEmpty {
-                    Section {
-                        ScrollView(.horizontal) {
-                            LazyHStack(spacing: Layout.Spacing.m) {
-                                ForEach(store.waitingChats) { chat in
-                                    WaitingChatRow(name: chat.username.firstWord)
-                                }
-                            }
-                        }
-                        .scrollIndicators(.hidden)
-                    } header: {
-                        ChatSectionHeader(title: .chatListWaitingHeader)
-                    }
+                    WaitingChatsSection(chats: store.waitingChats)
                 }
 
                 if !store.activeChats.isEmpty {
-                    Section {
-                        LazyVStack(spacing: Layout.Spacing.s) {
-                            ForEach(store.activeChats) { chat in
-                                ActiveChatRow(username: chat.username, lastMessage: chat.lastMessage)
-                            }
-                        }
-                    } header: {
-                        ChatSectionHeader(title: .chatListActiveHeader)
-                    }
+                    ActiveChatsSection(chats: store.activeChats)
                 }
             }
             .padding(Layout.Spacing.m)
