@@ -8,6 +8,6 @@
 
 extension String {
     var firstWord: String {
-        split(separator: " ", omittingEmptySubsequences: true).first.map(String.init) ?? self
+        split(separator: " ", omittingEmptySubsequences: true).first.map(String.init) ?? ""
     }
 }

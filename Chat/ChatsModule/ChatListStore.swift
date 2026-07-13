@@ -10,7 +10,7 @@ import Foundation
 @MainActor
 @Observable
 final class ChatListStore {
-    private(set) var chats = ChatListModel.mock {
+    private(set) var chats: [ChatListModel] {
         didSet { recomputeVisibleChats() }
     }
 
@@ -23,7 +23,8 @@ final class ChatListStore {
     private(set) var waitingChats: [ChatListModel] = []
     private(set) var activeChats: [ChatListModel] = []
 
-    init() {
+    init(chats: [ChatListModel] = ChatListModel.mock) {
+        self.chats = chats
         recomputeVisibleChats()
     }
 
